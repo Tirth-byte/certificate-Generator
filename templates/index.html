@@ -1813,6 +1813,12 @@
                                 </div>
                             </div>
                             <div class="form-group" style="margin-top: 0.5rem;">
+                                <label>Connected Excel Columns (Tags)</label>
+                                <div id="chips-container-${fieldName}" style="display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.5rem; border: 2px solid var(--border); border-radius: var(--radius-sm); background-color: var(--bg-primary); min-height: 38px; align-items: center;">
+                                    <!-- Dynamic column chips will populate here -->
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top: 0.5rem;">
                                 <label>Custom Format Template (e.g. 'Awarded to {Name}')</label>
                                 <input type="text" id="input-${fieldName}-text" placeholder="{${fieldName}}" value="${fCfg.text || ''}" oninput="updateFieldProperty('${fieldName}', 'text', this.value);">
                             </div>
@@ -1820,6 +1826,7 @@
                     </div>
                 `;
                 elements.fieldsContainer.insertAdjacentHTML('beforeend', fieldItemHtml);
+                renderFieldChips(fieldName, fCfg.text || '');
             });
         }
 
@@ -1843,6 +1850,11 @@
             state.config.fields[fieldName][property] = value;
             updateCanvasTags();
             autoSaveConfig();
+
+            // Render chips dynamically if text changed
+            if (property === 'text') {
+                renderFieldChips(fieldName, value);
+            }
 
             // Auto-check in Recipient Columns if this is the "Name" field changing its text/mapping
             if (fieldName.toLowerCase() === 'name' && property === 'text') {
@@ -1881,6 +1893,70 @@
                 const currentVal = input.value.trim();
                 input.value = currentVal ? `${currentVal} ${placeholder}` : placeholder;
                 updateFieldProperty(fieldName, 'text', input.value);
+            }
+        }
+
+        // Render connected columns as interactive visual chips/badges
+        function renderFieldChips(fieldName, text) {
+            const chipsContainer = document.getElementById(`chips-container-${fieldName}`);
+            if (!chipsContainer) return;
+            
+            chipsContainer.innerHTML = '';
+            if (!text) {
+                chipsContainer.innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted); font-style: italic;">No Excel columns connected yet...</span>`;
+                return;
+            }
+            
+            const regex = /\{([^}]+)\}/g;
+            let match;
+            let count = 0;
+            while ((match = regex.exec(text)) !== null) {
+                const colName = match[1];
+                const chip = document.createElement('span');
+                chip.className = 'column-chip';
+                chip.style.display = 'inline-flex';
+                chip.style.alignItems = 'center';
+                chip.style.gap = '0.35rem';
+                chip.style.padding = '0.2rem 0.5rem';
+                chip.style.backgroundColor = 'var(--bg-surface)';
+                chip.style.border = '2px solid var(--border)';
+                chip.style.borderRadius = 'var(--radius-sm)';
+                chip.style.fontSize = '0.75rem';
+                chip.style.fontWeight = '800';
+                chip.style.boxShadow = '1px 1px 0px var(--border)';
+                chip.style.color = 'var(--text-primary)';
+                
+                chip.innerHTML = `
+                    <span>${colName}</span>
+                    <i class="fa-solid fa-xmark" style="cursor: pointer; color: var(--danger); font-size: 0.8rem; font-weight: 900;" onclick="removeColumnFromField('${fieldName}', '${colName.replace(/'/g, "\\'")}')"></i>
+                `;
+                chipsContainer.appendChild(chip);
+                count++;
+            }
+            
+            if (count === 0) {
+                chipsContainer.innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted); font-style: italic;">No Excel columns connected yet...</span>`;
+            }
+        }
+
+        // Helper to remove a mapped column from text and uncheck in Recipient Columns
+        function removeColumnFromField(fieldName, colName) {
+            const input = document.getElementById(`input-${fieldName}-text`);
+            if (input) {
+                const currentText = input.value;
+                const placeholder = `{${colName}}`;
+                let newText = currentText.replace(placeholder, '').replace(/\s+/g, ' ').trim();
+                input.value = newText;
+                updateFieldProperty(fieldName, 'text', newText);
+                
+                // If it is the Name field, automatically uncheck this column from Recipient Columns checklist
+                if (fieldName.toLowerCase() === 'name') {
+                    const checkbox = document.getElementById(`recipient-col-check-${colName}`);
+                    if (checkbox) {
+                        checkbox.checked = false;
+                        updateScannedColumnsConfig();
+                    }
+                }
             }
         }
 
