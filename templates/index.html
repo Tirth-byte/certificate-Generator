@@ -1841,6 +1841,34 @@
             state.config.fields[fieldName][property] = value;
             updateCanvasTags();
             autoSaveConfig();
+
+            // Auto-check in Recipient Columns if this is the "Name" field changing its text/mapping
+            if (fieldName.toLowerCase() === 'name' && property === 'text') {
+                autoCheckRecipientColumnsFromText(value);
+            }
+        }
+
+        // Automatically check corresponding columns in Recipient Columns checklist
+        function autoCheckRecipientColumnsFromText(text) {
+            if (!state.headers || !text) return;
+            // Match any {ColumnName} in the text template
+            const regex = /\{([^}]+)\}/g;
+            let match;
+            let updated = false;
+            while ((match = regex.exec(text)) !== null) {
+                const colName = match[1];
+                const exactHeader = state.headers.find(h => h === colName);
+                if (exactHeader) {
+                    const checkbox = document.getElementById(`recipient-col-check-${exactHeader}`);
+                    if (checkbox && !checkbox.checked) {
+                        checkbox.checked = true;
+                        updated = true;
+                    }
+                }
+            }
+            if (updated) {
+                updateScannedColumnsConfig();
+            }
         }
 
         // Add a new custom field overlay config
