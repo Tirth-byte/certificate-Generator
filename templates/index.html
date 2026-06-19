@@ -1,0 +1,2486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cert Generator - Premium Studio</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Claude Neo-Brutalist color palette */
+            --bg-primary: #faf9f5;
+            --bg-secondary: #ffffff;
+            --surface: #e8e6dc;
+            --surface-hover: #e8e1d7;
+            --accent: #d97757;
+            --text-primary: #141413;
+            --text-secondary: #6e645e;
+            
+            --border: #141413;
+            --border-hover: #141413;
+            --shadow: 4px 4px 0px 0px #141413;
+            --shadow-sm: 2px 2px 0px 0px #141413;
+            --shadow-lg: 8px 8px 0px 0px #141413;
+
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+
+            /* Legacy variable mapping to ensure absolute compatibility with inline styles */
+            --bg-base: #faf9f5;
+            --bg-surface: #ffffff;
+            --border-color: #141413;
+            --primary: #d97757;
+            --primary-hover: #c15f3c;
+            --secondary: #6a9bcc;
+            --text-main: #141413;
+            --text-muted: #6e645e;
+            --success: #788c5d;
+            --danger: #c15f3c;
+            --font-main: 'Inter', sans-serif;
+            --transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--surface) 100%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.5;
+            height: 100vh;
+        }
+
+        /* App Layout */
+        .app-container {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Control Panel */
+        .sidebar {
+            background-color: var(--bg-secondary);
+            border-right: 3px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow-y: auto;
+            padding: 1.5rem;
+            gap: 1.5rem;
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--border);
+        }
+
+        .brand i {
+            color: var(--accent);
+            font-size: 1.8rem;
+        }
+
+        .brand h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-primary);
+        }
+
+        /* Section Headings */
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Cards and Sections */
+        .control-card {
+            background-color: var(--bg-secondary);
+            border: 3px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .control-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px var(--border);
+        }
+
+        /* File Upload Styling */
+        .upload-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .upload-box {
+            position: relative;
+            border: 3px dashed var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1.25rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background-color: var(--bg-secondary);
+            box-shadow: var(--shadow);
+        }
+
+        .upload-box:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px var(--border);
+            background-color: #fbf9f5;
+        }
+
+        .upload-box i {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .upload-box p {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .upload-box span {
+            font-size: 0.75rem;
+            display: block;
+            margin-top: 0.25rem;
+            color: var(--accent);
+            font-weight: 700;
+            word-break: break-all;
+            text-decoration: underline;
+        }
+
+        .upload-box input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Fields Configuration List */
+        .fields-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-height: 350px;
+            overflow-y: auto;
+            padding-right: 0.25rem;
+        }
+
+        .field-item {
+            background-color: var(--bg-surface);
+            border: 3px solid var(--border);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .field-item:hover {
+            border-color: var(--border);
+        }
+
+        .field-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            user-select: none;
+            background-color: var(--bg-surface);
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .field-header:hover {
+            background-color: var(--bg-base);
+        }
+
+        .field-name-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+
+        .field-name-wrapper i {
+            color: var(--text-main);
+            font-size: 0.8rem;
+        }
+
+        .field-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            background: var(--bg-surface);
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            width: 26px;
+            height: 26px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            box-shadow: 1px 1px 0px var(--border);
+        }
+
+        .btn-icon:hover {
+            background-color: var(--primary);
+            color: #ffffff;
+            transform: translate(-1px, -1px);
+            box-shadow: 2px 2px 0px var(--border);
+        }
+
+        .btn-icon.active {
+            color: #ffffff;
+            background-color: var(--primary);
+            transform: translate(1px, 1px);
+            box-shadow: 0px 0px 0px var(--border);
+        }
+
+        .field-body {
+            padding: 1rem;
+            border-top: 3px solid var(--border);
+            display: none;
+            flex-direction: column;
+            gap: 0.75rem;
+            background-color: var(--bg-base);
+        }
+
+        .field-item.expanded .field-body {
+            display: flex;
+        }
+
+        .field-item.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .toggle-icon {
+            transition: var(--transition);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Form Inputs */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+            color: var(--text-main);
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .form-group input, .form-group select {
+            background-color: var(--bg-surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.4rem 0.6rem;
+            color: var(--text-main);
+            font-family: var(--font-main);
+            font-size: 0.8rem;
+            font-weight: 700;
+            width: 100%;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--border);
+            box-shadow: 2px 2px 0px 0px var(--border);
+        }
+
+        .form-group input[type="color"] {
+            padding: 0.1rem;
+            height: 28px;
+            cursor: pointer;
+        }
+
+        /* Global Buttons */
+        .btn-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 3px solid var(--border);
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            border-radius: var(--radius-sm);
+            border: 3px solid var(--border);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            width: 100%;
+            transform: translate(0, 0);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translate(-3px, -3px);
+            box-shadow: 7px 7px 0px 0px var(--border);
+            background-color: var(--primary-hover);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px 0px var(--border);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-surface);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background-color: #f1f5f9;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px var(--border);
+        }
+
+        .btn-secondary:active:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px 0px var(--border);
+        }
+
+        .btn-accent {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-accent:hover:not(:disabled) {
+            transform: translate(-3px, -3px);
+            box-shadow: 7px 7px 0px 0px var(--border);
+            background-color: #588bbd;
+        }
+
+        .btn-accent:active:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px 0px var(--border);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            transform: translate(-3px, -3px);
+            box-shadow: 7px 7px 0px 0px var(--border);
+            background-color: #c15f3c;
+            filter: brightness(0.9);
+        }
+
+        .btn-danger:active:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px 0px var(--border);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: 2px 2px 0px 0px var(--border) !important;
+        }
+
+        /* Right Content Area */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-primary);
+        }
+
+        /* Main Workspace Header */
+        .workspace-header {
+            height: 60px;
+            border-bottom: 3px solid var(--border);
+            background-color: var(--bg-surface);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 5;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .tab {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--text-main);
+            cursor: pointer;
+            padding: 0.4rem 1rem;
+            border: 2px solid var(--border);
+            background-color: var(--bg-surface);
+            box-shadow: 2px 2px 0px 0px var(--border);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .tab:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px 0px var(--border);
+        }
+
+        .tab.active {
+            background-color: var(--primary);
+            color: #ffffff;
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px 0px var(--border);
+        }
+
+        .tab.active::after {
+            display: none;
+        }
+
+        /* Workspace Panels */
+        .panel-container {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            padding: 1.5rem 2rem;
+            overflow-y: auto;
+        }
+
+        .panel.active {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Canvas Live Editor Layout */
+        .editor-workspace {
+            display: flex;
+            gap: 2rem;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .canvas-container {
+            flex: 1;
+            background-color: var(--bg-primary);
+            background-image: radial-gradient(rgba(20, 20, 19, 0.15) 1.5px, transparent 0);
+            background-size: 24px 24px;
+            border: 3px solid var(--border);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: auto;
+            min-height: 400px;
+            box-shadow: 6px 6px 0px 0px var(--border);
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            max-width: 95%;
+            max-height: 95%;
+            border: 3px solid var(--border);
+            box-shadow: 8px 8px 0px 0px var(--border);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        #template-img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        /* Crosshairs line indicator */
+        .picker-active #template-img {
+            cursor: crosshair;
+        }
+
+        .picker-overlay-msg {
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent);
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 800;
+            padding: 0.5rem 1.25rem;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border);
+            box-shadow: 4px 4px 0px 0px var(--border);
+            pointer-events: none;
+            display: none;
+            z-index: 100;
+            animation: fadeInDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Visual tags on the preview */
+        .canvas-tag {
+            position: absolute;
+            background-color: var(--bg-surface);
+            border: 2px solid var(--border);
+            color: var(--text-main);
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            box-shadow: 3px 3px 0px 0px var(--border);
+            white-space: nowrap;
+        }
+
+        .canvas-tag.active {
+            background-color: var(--accent);
+            color: #ffffff;
+            z-index: 20;
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+
+        /* Excel Data View */
+        .table-container {
+            border: 3px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow-x: auto;
+            max-height: 500px;
+            background-color: var(--bg-surface);
+            box-shadow: 6px 6px 0px 0px var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+            border-bottom: 3px solid var(--border);
+            border-right: 2px solid var(--border);
+        }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        td {
+            padding: 0.85rem 1rem;
+            border-bottom: 2px solid var(--border);
+            border-right: 2px solid var(--border);
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        td:last-child {
+            border-right: none;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #fbf9f5;
+        }
+
+        /* Output Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 0.5rem;
+        }
+
+        .gallery-card {
+            background-color: var(--bg-surface);
+            border: 3px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: 4px 4px 0px 0px var(--border);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .gallery-card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 7px 7px 0px 0px var(--border);
+            border-color: var(--border);
+        }
+
+        .gallery-thumb-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            overflow: hidden;
+            background-color: var(--bg-base);
+            border-bottom: 3px solid var(--border);
+        }
+
+        .gallery-thumb-wrapper img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-card:hover .gallery-thumb-wrapper img {
+            transform: scale(1.03);
+        }
+
+        .gallery-card-info {
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gallery-card-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+
+        .gallery-card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Lightbox Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(250, 249, 245, 0.96); /* Pampas cream backdrop */
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            border: 4px solid var(--border);
+            box-shadow: 10px 10px 0px 0px var(--border);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .modal-content img {
+            display: block;
+            max-width: 100%;
+            max-height: 85vh;
+            height: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            color: var(--text-main);
+            font-size: 2.5rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 1001;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(20, 20, 19, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Compact 12-16px gaps */
+        }
+
+        .toast {
+            background-color: var(--bg-secondary);
+            border: 3px solid var(--border-color);
+            box-shadow: var(--shadow);
+            color: var(--text-primary);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 320px;
+            font-size: 0.85rem;
+            font-weight: 800; /* Bold typography */
+            transition: var(--transition);
+            animation: toastEnter 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .toast.success { 
+            border-color: var(--success); 
+            box-shadow: var(--shadow);
+        }
+
+        .toast.error { 
+            border-color: var(--danger); 
+            box-shadow: var(--shadow);
+        }
+
+        .toast i { 
+            font-size: 1.25rem; 
+        }
+
+        .toast.success i { 
+            color: var(--success); 
+        }
+
+        .toast.error i { 
+            color: var(--danger); 
+        }
+
+        .toast.exit {
+            animation: toastExit 0.3s forwards ease-in-out;
+        }
+
+        @keyframes toastEnter {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes toastExit {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+
+        /* Animations */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translate(-50%, -20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--surface);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--surface-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- SIDEBAR CONTROLS -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-award"></i>
+                <h1>Cert Studio</h1>
+            </div>
+
+            <!-- Uploads Control -->
+            <section class="control-card upload-group">
+                <h3 class="section-title"><i class="fa-solid fa-cloud-arrow-up"></i> Project Files</h3>
+                
+                <div class="upload-box" id="template-drop">
+                    <i class="fa-regular fa-image"></i>
+                    <p>Upload Template Image</p>
+                    <span id="template-filename">sample_template.png</span>
+                    <input type="file" id="template-upload" accept="image/*">
+                </div>
+
+                <div class="upload-box" id="excel-drop">
+                    <i class="fa-regular fa-file-excel"></i>
+                    <p>Upload Spreadsheet (Excel / CSV)</p>
+                    <span id="excel-filename">sample_data.xlsx</span>
+                    <input type="file" id="excel-upload" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
+                </div>
+            </section>
+
+            <!-- Project/Folder Name Configuration -->
+            <section class="control-card" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <h3 class="section-title" style="margin-bottom: 0.1rem;">
+                    <i class="fa-solid fa-folder-open"></i> Project / Folder Name
+                </h3>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;">
+                    Sets the name of the main folder for Google Drive sync and ZIP/Excel downloads.
+                </p>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <input type="text" id="main-folder-name-input" placeholder="Certificates" value="Certificates" style="margin-top: 0.25rem;">
+                </div>
+            </section>
+
+            <!-- Recipient Columns Configuration -->
+            <section class="control-card" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <h3 class="section-title" style="margin-bottom: 0.1rem;">
+                    <i class="fa-solid fa-user-check"></i> Recipient Columns
+                </h3>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;">
+                    Select columns to scan for recipient names:
+                </p>
+                <div id="recipient-checkboxes-container" style="display: flex; flex-direction: column; gap: 0.6rem; padding-left: 0.25rem;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">
+                        Upload spreadsheet to view columns...
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fields Configuration -->
+            <section class="control-card" style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1;">
+                <h3 class="section-title" style="margin-bottom: 0.25rem;">
+                    <i class="fa-solid fa-sliders"></i> Layout Settings
+                </h3>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                    Configure fields or click <i class="fa-solid fa-crosshairs"></i> to pick canvas coordinates.
+                </p>
+                
+                <div class="fields-list" id="fields-list-container">
+                    <!-- Dynamic field items will populate here -->
+                </div>
+                
+                <!-- Helper button to add custom mapping -->
+                <button class="btn btn-secondary" style="padding: 0.4rem 0.75rem; font-size: 0.75rem; margin-top: 0.5rem;" id="add-field-btn">
+                    <i class="fa-solid fa-plus"></i> Add Custom Field Mapping
+                </button>
+            </section>
+
+            <!-- Google Drive Cloud Sync -->
+            <section class="control-card" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <h3 class="section-title" style="margin-bottom: 0.25rem;">
+                    <i class="fa-brands fa-google-drive"></i> Google Drive Sync
+                </h3>
+                
+                <!-- Overall Sync Status Badge -->
+                <div id="drive-status-badge" style="font-size: 0.8rem; font-weight: 800; padding: 0.5rem; border: 2px solid var(--border); border-radius: var(--radius-sm); text-align: center; box-shadow: var(--shadow-sm); background-color: var(--surface);">
+                    <span class="spinner" style="width: 12px; height: 12px; border-width: 1.5px;"></span> Checking status...
+                </div>
+
+                <!-- Active Sync Selector -->
+                <div style="display: flex; flex-direction: column; gap: 0.4rem; padding: 0.5rem; border: 2px solid var(--border); border-radius: var(--radius-sm); background-color: var(--bg-primary); box-shadow: var(--shadow-sm);">
+                    <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 0.2rem; display: block;">Select Active Sync</span>
+                    <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; font-weight: 700; cursor: pointer; margin: 0;">
+                        <input type="radio" name="drive-method" value="none" style="cursor: pointer;"> None (Local Only)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; font-weight: 700; cursor: pointer; margin: 0;">
+                        <input type="radio" name="drive-method" value="service_account" style="cursor: pointer;"> Service Account JSON
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; font-weight: 700; cursor: pointer; margin: 0;">
+                        <input type="radio" name="drive-method" value="oauth" style="cursor: pointer;"> OAuth User Drive
+                    </label>
+                </div>
+
+                <!-- Credentials Setup / Manager for both methods -->
+                <div id="drive-credentials-setup" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <!-- Service Account Key Card -->
+                    <div style="border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 0.5rem; background-color: var(--bg-secondary); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 0.4rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; font-weight: 800;">
+                            <span>Service Account</span>
+                            <span id="sa-status-badge" style="padding: 0.1rem 0.35rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.65rem; font-weight: bold; background-color: var(--surface);">Checking...</span>
+                        </div>
+                        <div class="upload-box" id="sa-drop" style="padding: 0.5rem 0.25rem; font-size: 0.7rem; border-width: 2px; border-style: dashed; box-shadow: none;">
+                            <p style="font-size: 0.7rem; margin: 0;"><i class="fa-solid fa-cloud-arrow-up" style="font-size: 1rem; margin-bottom: 0.25rem; display: block;"></i> Upload service_account.json</p>
+                            <input type="file" id="sa-upload" accept=".json">
+                        </div>
+                        <button class="btn btn-secondary" id="sa-disconnect-btn" style="padding: 0.2rem 0.5rem; font-size: 0.65rem; display: none; width: 100%; margin: 0; min-height: unset; height: auto;">
+                            <i class="fa-solid fa-trash-can"></i> Delete Key File
+                        </button>
+                    </div>
+
+                    <!-- OAuth Client ID Card -->
+                    <div style="border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 0.5rem; background-color: var(--bg-secondary); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 0.4rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; font-weight: 800;">
+                            <span>OAuth Credentials</span>
+                            <span id="oauth-status-badge" style="padding: 0.1rem 0.35rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.65rem; font-weight: bold; background-color: var(--surface);">Checking...</span>
+                        </div>
+                        <div class="upload-box" id="oauth-drop" style="padding: 0.5rem 0.25rem; font-size: 0.7rem; border-width: 2px; border-style: dashed; box-shadow: none;">
+                            <p style="font-size: 0.7rem; margin: 0;"><i class="fa-solid fa-cloud-arrow-up" style="font-size: 1rem; margin-bottom: 0.25rem; display: block;"></i> Upload credentials.json</p>
+                            <input type="file" id="oauth-upload" accept=".json">
+                        </div>
+                        <button class="btn btn-primary" id="oauth-trigger" style="padding: 0.3rem 0.5rem; font-size: 0.7rem; display: none; width: 100%; margin: 0; min-height: unset; height: auto; border-width: 2px; box-shadow: var(--shadow-sm);">
+                            <i class="fa-brands fa-google"></i> Connect Account
+                        </button>
+                        <button class="btn btn-secondary" id="oauth-disconnect-btn" style="padding: 0.2rem 0.5rem; font-size: 0.65rem; display: none; width: 100%; margin: 0; min-height: unset; height: auto;">
+                            <i class="fa-solid fa-trash-can"></i> Delete OAuth Key
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action buttons stack -->
+            <div class="btn-stack">
+                <button class="btn btn-secondary" id="save-config-btn">
+                    <i class="fa-regular fa-floppy-disk"></i> Save Layout Config
+                </button>
+                <button class="btn btn-accent" id="preview-btn">
+                    <i class="fa-regular fa-eye"></i> Quick Preview
+                </button>
+                <button class="btn btn-primary" id="generate-btn">
+                    <i class="fa-solid fa-gears"></i> Batch Generate
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN WORKSPACE -->
+        <main class="main-content">
+            
+            <header class="workspace-header">
+                <div class="tabs">
+                    <span class="tab active" data-tab="tab-editor">Layout Canvas</span>
+                    <span class="tab" data-tab="tab-data">Excel Spreadsheet</span>
+                    <span class="tab" data-tab="tab-gallery" id="gallery-tab-header">Generated Gallery</span>
+                </div>
+                
+                <div id="status-bar" style="font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;">
+                    <!-- Real-time status info -->
+                </div>
+            </header>
+
+            <div class="panel-container">
+                
+                <!-- CANVAS EDITOR PANEL -->
+                <div class="panel active" id="tab-editor" style="padding: 0; overflow: hidden;">
+                    <div class="editor-workspace">
+                        <div class="canvas-container" id="canvas-scroll-container">
+                            <div class="canvas-wrapper" id="canvas-wrapper">
+                                <img src="/output/preview.png" alt="Certificate Template Preview" id="template-img" crossorigin="anonymous">
+                                <div class="picker-overlay-msg" id="picker-msg">
+                                    Click on the image to set coordinates for: <span id="picker-field-name" style="font-weight: 700; text-decoration: underline;">Name</span>
+                                </div>
+                                <!-- Canvas tags will overlay here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXCEL DATA PANEL -->
+                <div class="panel" id="tab-data">
+                    <div class="section-title"><i class="fa-solid fa-table-list"></i> Spreadsheet Recipient Data</div>
+                    <div class="table-container">
+                        <table id="data-table">
+                            <thead>
+                                <tr>
+                                    <th>No headers loaded</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Upload an Excel file to display recipient records.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- GALLERY PANEL -->
+                <div class="panel" id="tab-gallery">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <div class="section-title" style="margin-bottom: 0;"><i class="fa-regular fa-images"></i> Generated Outputs</div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-danger" id="delete-all-btn" style="width: auto; padding: 0.5rem 1rem; font-size: 0.8rem; min-height: unset; margin: 0; box-shadow: var(--shadow-sm);" disabled>
+                                <i class="fa-regular fa-trash-can"></i> Delete All
+                            </button>
+                            <button class="btn btn-secondary" id="download-report-btn" style="width: auto; padding: 0.5rem 1rem; font-size: 0.8rem; border: 1px solid var(--border-color);" disabled>
+                                <i class="fa-regular fa-file-excel"></i> Download Excel Report
+                            </button>
+                            <button class="btn btn-primary" id="download-zip-btn" style="width: auto; padding: 0.5rem 1rem; font-size: 0.8rem;" disabled>
+                                <i class="fa-regular fa-file-zip"></i> Download All (ZIP)
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-grid" id="gallery-container">
+                        <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 3rem;">
+                            <i class="fa-regular fa-folder-open" style="font-size: 2.5rem; margin-bottom: 1rem; display: block; color: rgba(255,255,255,0.15);"></i>
+                            No certificates generated yet. Click "Batch Generate" to produce high-resolution copies.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- LIGHTBOX MODAL -->
+    <div class="modal" id="lightbox-modal">
+        <span class="modal-close" id="lightbox-close">&times;</span>
+        <div class="modal-content">
+            <img src="" alt="Enlarged view" id="lightbox-img">
+        </div>
+    </div>
+
+    <!-- PROGRESS MODAL -->
+    <div class="modal" id="progress-modal" style="display: none; align-items: center; justify-content: center; background-color: rgba(20, 20, 19, 0.85);">
+        <div class="control-card" style="width: 450px; padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; background-color: var(--bg-secondary); border: 3px solid var(--border); box-shadow: var(--shadow-lg); transform: none; cursor: default;">
+            <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0; display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary);">
+                <i class="fa-solid fa-gears" id="progress-spinner-icon" style="color: var(--accent); font-size: 1.4rem;"></i>
+                Generating Certificates
+            </h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 800; color: var(--text-primary);">
+                    <span id="progress-status-text">Scanning data...</span>
+                    <span id="progress-percent-text">0%</span>
+                </div>
+                
+                <!-- Progress Bar container -->
+                <div style="width: 100%; height: 20px; border: 3px solid var(--border); background-color: var(--surface); border-radius: var(--radius-sm); overflow: hidden; position: relative;">
+                    <div id="progress-bar-fill" style="width: 0%; height: 100%; background-color: var(--accent); transition: width 0.15s ease-out; border-right: 3px solid var(--border);"></div>
+                </div>
+                
+                <div id="progress-current-recipient" style="font-size: 0.75rem; color: var(--text-secondary); text-align: left; height: 1.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 0.25rem;">
+                    Preparing recipients...
+                </div>
+            </div>
+
+            <button class="btn btn-danger" id="progress-stop-btn" style="width: 100%; justify-content: center; font-weight: 800; min-height: 44px; margin: 0;">
+                <i class="fa-solid fa-circle-stop"></i> Stop Generation
+            </button>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- JAVASCRIPT FRONTEND LOGIC -->
+    <script>
+        // State management
+        const state = {
+            config: {
+                template_path: 'sample_template.png',
+                excel_path: 'sample_data.xlsx',
+                output_dir: 'output',
+                fonts_dir: 'fonts',
+                fields: {}
+            },
+            availableFonts: [],
+            activePickerField: null, // Field name actively collecting coordinates
+            records: [],
+            headers: []
+        };
+
+        // DOM elements
+        const elements = {
+            tabs: document.querySelectorAll('.tab'),
+            panels: document.querySelectorAll('.panel'),
+            templateImg: document.getElementById('template-img'),
+            canvasWrapper: document.getElementById('canvas-wrapper'),
+            pickerMsg: document.getElementById('picker-msg'),
+            pickerFieldName: document.getElementById('picker-field-name'),
+            fieldsContainer: document.getElementById('fields-list-container'),
+            saveConfigBtn: document.getElementById('save-config-btn'),
+            previewBtn: document.getElementById('preview-btn'),
+            generateBtn: document.getElementById('generate-btn'),
+            downloadZipBtn: document.getElementById('download-zip-btn'),
+            downloadReportBtn: document.getElementById('download-report-btn'),
+            deleteAllBtn: document.getElementById('delete-all-btn'),
+            dataTable: document.getElementById('data-table'),
+            galleryContainer: document.getElementById('gallery-container'),
+            galleryTabHeader: document.getElementById('gallery-tab-header'),
+            templateUpload: document.getElementById('template-upload'),
+            excelUpload: document.getElementById('excel-upload'),
+            templateFilename: document.getElementById('template-filename'),
+            excelFilename: document.getElementById('excel-filename'),
+            addFieldBtn: document.getElementById('add-field-btn'),
+            lightboxModal: document.getElementById('lightbox-modal'),
+            lightboxImg: document.getElementById('lightbox-img'),
+            lightboxClose: document.getElementById('lightbox-close'),
+            statusBar: document.getElementById('status-bar'),
+            saUpload: document.getElementById('sa-upload'),
+            saDrop: document.getElementById('sa-drop'),
+            driveStatusBadge: document.getElementById('drive-status-badge'),
+            driveSetupArea: document.getElementById('drive-setup-area'),
+            progressModal: document.getElementById('progress-modal'),
+            progressStatusText: document.getElementById('progress-status-text'),
+            progressPercentText: document.getElementById('progress-percent-text'),
+            progressBarFill: document.getElementById('progress-bar-fill'),
+            progressCurrentRecipient: document.getElementById('progress-current-recipient'),
+            progressStopBtn: document.getElementById('progress-stop-btn'),
+            progressSpinnerIcon: document.getElementById('progress-spinner-icon'),
+            recipientCheckboxesContainer: document.getElementById('recipient-checkboxes-container')
+        };
+
+        // Initialize App
+        async function init() {
+            setupEventListeners();
+            await fetchConfig();
+            await fetchFonts();
+            await fetchExcelData();
+            await checkDriveStatus();
+            await refreshGallery();
+            
+            // Set initial state
+            updateFieldListUI();
+            updateCanvasTags();
+
+            // Check if there is an active generation running on load
+            try {
+                const statusRes = await fetch('/api/generate/status');
+                if (statusRes.ok) {
+                    const statusData = await statusRes.json();
+                    if (statusData.is_running) {
+                        showProgressModal();
+                        startPollingProgress();
+                    }
+                }
+            } catch (err) {
+                console.error("Error checking active generation status", err);
+            }
+        }
+
+        // Setup DOM event listeners
+        function setupEventListeners() {
+            // Tab switching
+            elements.tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    elements.tabs.forEach(t => t.classList.remove('active'));
+                    elements.panels.forEach(p => p.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    const targetPanel = document.getElementById(tab.getAttribute('data-tab'));
+                    targetPanel.classList.add('active');
+                    
+                    // Trigger tag recalculation when canvas editor becomes visible
+                    if (tab.getAttribute('data-tab') === 'tab-editor') {
+                        setTimeout(updateCanvasTags, 100);
+                    }
+                });
+            });
+
+            // File uploads
+            elements.templateUpload.addEventListener('change', (e) => handleFileUpload(e.target.files[0], 'template'));
+            elements.excelUpload.addEventListener('change', (e) => handleFileUpload(e.target.files[0], 'excel'));
+
+            // Drag and drop setup
+            setupDynamicDragAndDrop('template-drop', (f) => handleFileUpload(f, 'template'));
+            setupDynamicDragAndDrop('excel-drop', (f) => handleFileUpload(f, 'excel'));
+            setupDynamicDragAndDrop('sa-drop', (f) => handleDriveCredentialsUpload(f, 'service_account'));
+            setupDynamicDragAndDrop('oauth-drop', (f) => handleDriveCredentialsUpload(f, 'credentials'));
+
+            // Credentials Handling
+            if (elements.saUpload) {
+                elements.saUpload.addEventListener('change', (e) => handleDriveCredentialsUpload(e.target.files[0], 'service_account'));
+            }
+            const oauthUpload = document.getElementById('oauth-upload');
+            if (oauthUpload) {
+                oauthUpload.addEventListener('change', (e) => handleDriveCredentialsUpload(e.target.files[0], 'credentials'));
+            }
+
+            // OAuth login flow trigger
+            const oauthTrigger = document.getElementById('oauth-trigger');
+            if (oauthTrigger) {
+                oauthTrigger.addEventListener('click', async () => {
+                    showToast('Opening Google authentication flow in browser. Please authorize the app.', 'success');
+                    try {
+                        const response = await fetch('/api/drive-status', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ action: "oauth_login" })
+                        });
+                        const res = await response.json();
+                        if (res.status === 'success' && res.connected) {
+                            showToast('Google Drive OAuth authorization successful!', 'success');
+                        } else {
+                            showToast('OAuth authorization failed or was cancelled.', 'error');
+                        }
+                        await checkDriveStatus();
+                    } catch (err) {
+                        showToast('Error communicating during authorization.', 'error');
+                    }
+                });
+            }
+
+            // Disconnect handlers
+            const saDisconnect = document.getElementById('sa-disconnect-btn');
+            if (saDisconnect) {
+                saDisconnect.addEventListener('click', () => disconnectDriveMethod('service_account'));
+            }
+            const oauthDisconnect = document.getElementById('oauth-disconnect-btn');
+            if (oauthDisconnect) {
+                oauthDisconnect.addEventListener('click', () => disconnectDriveMethod('oauth'));
+            }
+
+            // Radio selectors handler
+            document.querySelectorAll('input[name="drive-method"]').forEach(radio => {
+                radio.addEventListener('change', async (e) => {
+                    const method = e.target.value;
+                    try {
+                        const response = await fetch('/api/drive-status', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ active_method: method })
+                        });
+                        const res = await response.json();
+                        if (res.status === 'success') {
+                            showToast(`Active Drive Sync set to: ${method === 'none' ? 'None (Local Only)' : method === 'service_account' ? 'Service Account' : 'OAuth'}`, 'success');
+                            await checkDriveStatus();
+                        } else {
+                            showToast('Failed to update active sync method.', 'error');
+                        }
+                    } catch (err) {
+                        showToast('Error communicating with server.', 'error');
+                    }
+                });
+            });
+
+            // Save layout settings
+            elements.saveConfigBtn.addEventListener('click', saveLayoutConfig);
+
+
+
+            // Project / Folder Name input listener to keep state.config updated and auto-saved
+            const folderInput = document.getElementById('main-folder-name-input');
+            if (folderInput) {
+                folderInput.addEventListener('input', () => {
+                    state.config.main_folder_name = folderInput.value.trim() || 'Certificates';
+                    autoSaveConfig();
+                });
+            }
+
+            // Preview generator
+            elements.previewBtn.addEventListener('click', triggerPreview);
+
+            // Batch generation
+            elements.generateBtn.addEventListener('click', triggerBatchGenerate);
+
+            // Stop batch generation
+            if (elements.progressStopBtn) {
+                elements.progressStopBtn.addEventListener('click', async () => {
+                    elements.progressStopBtn.disabled = true;
+                    elements.progressStopBtn.innerHTML = '<span class="spinner"></span> Stopping...';
+                    try {
+                        const response = await fetch('/api/generate/stop', { method: 'POST' });
+                        const res = response.ok ? await response.json() : null;
+                        if (res && res.status === 'success') {
+                            showToast('Stopping certificate generation...', 'info');
+                        } else {
+                            showToast('Failed to stop generation.', 'error');
+                            elements.progressStopBtn.disabled = false;
+                            elements.progressStopBtn.innerHTML = '<i class="fa-solid fa-circle-stop"></i> Stop Generation';
+                        }
+                    } catch (err) {
+                        showToast('Error requesting stop.', 'error');
+                        elements.progressStopBtn.disabled = false;
+                        elements.progressStopBtn.innerHTML = '<i class="fa-solid fa-circle-stop"></i> Stop Generation';
+                    }
+                });
+            }
+
+            // Download Excel Report
+            elements.downloadReportBtn.addEventListener('click', () => {
+                window.location.href = '/api/download-excel-report';
+                showToast('Downloading Excel report with certificate links...', 'success');
+            });
+
+            // Download ZIP
+            elements.downloadZipBtn.addEventListener('click', () => {
+                window.location.href = '/api/download-all';
+                showToast('Downloading ZIP archive...', 'success');
+            });
+
+            // Delete All certificates
+            if (elements.deleteAllBtn) {
+                elements.deleteAllBtn.addEventListener('click', async () => {
+                    if (!confirm('Are you sure you want to delete all generated certificates? This action cannot be undone.')) return;
+                    
+                    elements.deleteAllBtn.disabled = true;
+                    elements.deleteAllBtn.innerHTML = '<span class="spinner"></span> Deleting...';
+                    
+                    try {
+                        const response = await fetch('/api/certificates/delete-all', { method: 'POST' });
+                        const res = await response.json();
+                        if (res.status === 'success') {
+                            showToast('All certificates deleted successfully.', 'success');
+                            await refreshGallery();
+                        } else {
+                            showToast(res.error || 'Failed to delete certificates.', 'error');
+                            elements.deleteAllBtn.disabled = false;
+                        }
+                    } catch (err) {
+                        showToast('Error communicating with server.', 'error');
+                        elements.deleteAllBtn.disabled = false;
+                    } finally {
+                        elements.deleteAllBtn.innerHTML = '<i class="fa-regular fa-trash-can"></i> Delete All';
+                    }
+                });
+            }
+
+            // Add custom field mapping button
+            elements.addFieldBtn.addEventListener('click', addNewCustomField);
+
+            // Coordinate picker click listener
+            elements.templateImg.addEventListener('click', handleCanvasClick);
+            
+            // Resize handler for tags coordinates mapping recalculation
+            window.addEventListener('resize', updateCanvasTags);
+
+            // Lightbox closing
+            elements.lightboxClose.addEventListener('click', () => elements.lightboxModal.style.display = 'none');
+            elements.lightboxModal.addEventListener('click', (e) => {
+                if (e.target === elements.lightboxModal) elements.lightboxModal.style.display = 'none';
+            });
+        }
+
+        function setupDynamicDragAndDrop(id, callback) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => el.addEventListener(e, (ev) => ev.preventDefault()));
+            ['dragenter', 'dragover'].forEach(e => el.addEventListener(e, () => el.style.borderColor = 'var(--accent)'));
+            ['dragleave', 'drop'].forEach(e => el.addEventListener(e, () => el.style.borderColor = 'var(--border)'));
+            el.addEventListener('drop', (e) => callback(e.dataTransfer.files[0]));
+        }
+
+        // Fetch configurations from Flask
+        async function fetchConfig() {
+            try {
+                const response = await fetch('/api/config');
+                const data = await response.json();
+                state.config = data;
+                
+                // Update file labels
+                if (data.template_path) elements.templateFilename.textContent = data.template_path;
+                if (data.excel_path) elements.excelFilename.textContent = data.excel_path;
+                
+                // Update main folder name input
+                const folderInput = document.getElementById('main-folder-name-input');
+                if (folderInput) {
+                    folderInput.value = data.main_folder_name || 'Certificates';
+                }
+                
+                // Render recipient checkboxes if headers are loaded
+                renderRecipientCheckboxes();
+                
+                // If preview.png exists, show it, otherwise fallback to template directly
+                elements.templateImg.src = data.template_path ? `/${data.template_path}?t=${Date.now()}` : '';
+            } catch (err) {
+                showToast('Failed to load configuration.', 'error');
+            }
+        }
+
+        // Fetch font list from Flask
+        async function fetchFonts() {
+            try {
+                const response = await fetch('/api/fonts');
+                state.availableFonts = await response.json();
+            } catch (err) {
+                console.error('Failed to load fonts list', err);
+            }
+        }
+
+        // Render dynamic recipient checkboxes from Excel headers
+        function renderRecipientCheckboxes() {
+            const container = elements.recipientCheckboxesContainer;
+            if (!container) return;
+            
+            if (!state.headers || state.headers.length === 0) {
+                container.innerHTML = `
+                    <div style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">
+                        Upload spreadsheet to view columns...
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            const hasSavedCols = Array.isArray(state.config.scanned_columns);
+            const savedCols = hasSavedCols ? state.config.scanned_columns : [];
+            
+            state.headers.forEach(h => {
+                const isChecked = hasSavedCols ? savedCols.includes(h) : isRecipientColumnByDefault(h);
+                
+                const label = document.createElement('label');
+                label.style.display = 'flex';
+                label.style.alignItems = 'center';
+                label.style.gap = '0.6rem';
+                label.style.fontSize = '0.8rem';
+                label.style.cursor = 'pointer';
+                label.style.fontWeight = '800';
+                label.style.color = 'var(--text-primary)';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `recipient-col-check-${h}`;
+                checkbox.checked = isChecked;
+                checkbox.style.width = '17px';
+                checkbox.style.height = '17px';
+                checkbox.style.accentColor = 'var(--accent)';
+                checkbox.style.cursor = 'pointer';
+                checkbox.style.border = '2px solid var(--border)';
+                checkbox.style.borderRadius = 'var(--radius-sm)';
+                
+                checkbox.addEventListener('change', () => {
+                    updateScannedColumnsConfig();
+                });
+                
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(h));
+                container.appendChild(label);
+            });
+            
+            if (!hasSavedCols) {
+                updateScannedColumnsConfig(true);
+            }
+        }
+        
+        function isRecipientColumnByDefault(headerName) {
+            const h = headerName.toLowerCase();
+            if (h.includes('team') || h.includes('college') || h.includes('university') || h.includes('school') ||
+                h.includes('email') || h.includes('mobile') || h.includes('number') || 
+                h.includes('phone') || h.includes('address') || h.includes('status') ||
+                h.includes('conduct') || h.includes('course') || h.includes('degree') ||
+                h.includes('semester') || h.includes('id') || h.includes('registered') ||
+                h.includes('agreement') || h.includes('date') || h.includes('domain') || 
+                h.includes('event')) {
+                return false;
+            }
+            return h.includes('name') || 
+                   h.includes('leader') || 
+                   h.includes('member') || 
+                   h.includes('participant') || 
+                   h.includes('student') || 
+                   h.includes('candidate');
+        }
+
+        function updateScannedColumnsConfig(silent = false) {
+            if (!state.headers) return;
+            const checkedCols = [];
+            state.headers.forEach(h => {
+                const el = document.getElementById(`recipient-col-check-${h}`);
+                if (el && el.checked) {
+                    checkedCols.push(h);
+                }
+            });
+            state.config.scanned_columns = checkedCols;
+            if (!silent) {
+                autoSaveConfig();
+            }
+        }
+
+        // Fetch recipient data from Excel sheet
+        async function fetchExcelData() {
+            try {
+                const response = await fetch('/api/data');
+                if (!response.ok) {
+                    const err = await response.json();
+                    setExcelTableError(err.error || 'Spreadsheet file missing or invalid');
+                    return;
+                }
+                const data = await response.json();
+                state.records = data.records;
+                state.headers = data.headers;
+                
+                // Auto-map fields if config has no fields yet
+                if (state.headers && state.headers.length > 0 && (!state.config.fields || Object.keys(state.config.fields).length === 0)) {
+                    state.config.fields = {};
+                    
+                    const autoFields = {
+                        "Name": { yOffset: -50, font_size: 48, font: "PlayfairDisplay-Bold.ttf", color: "#0F172A" },
+                        "Role": { yOffset: 50, font_size: 32, font: "Montserrat-SemiBold.ttf", color: "#B48C46" },
+                        "Date": { yOffset: 150, font_size: 20, font: "Montserrat-Regular.ttf", color: "#dfd92a" }
+                    };
+                    
+                    const templateWidth = elements.templateImg.naturalWidth || 1920;
+                    const templateHeight = elements.templateImg.naturalHeight || 1080;
+                    const midX = Math.round(templateWidth / 2);
+                    const midY = Math.round(templateHeight / 2);
+                    
+                    state.headers.forEach(h => {
+                        const hLower = h.toLowerCase().trim();
+                        let matchedKey = null;
+                        if (hLower === 'name' || hLower === 'leader' || hLower === 'full name') {
+                            matchedKey = 'Name';
+                        } else if (hLower === 'role' || hLower === 'domain' || hLower === 'event') {
+                            matchedKey = 'Role';
+                        } else if (hLower === 'date' || hLower === 'registered at') {
+                            matchedKey = 'Date';
+                        }
+                        
+                        if (matchedKey && !state.config.fields[matchedKey]) {
+                            const spec = autoFields[matchedKey];
+                            state.config.fields[matchedKey] = {
+                                x: midX,
+                                y: midY + spec.yOffset,
+                                font_size: spec.font_size,
+                                font: spec.font,
+                                color: spec.color,
+                                align: "center",
+                                text: `{${h}}`
+                            };
+                        }
+                    });
+                    
+                    if (Object.keys(state.config.fields).length > 0) {
+                        updateFieldListUI();
+                        updateCanvasTags();
+                        autoSaveConfig();
+                        showToast('Automatically mapped fields from sheet columns!', 'success');
+                    }
+                }
+                
+                renderRecipientCheckboxes();
+                updateExcelTableUI();
+                elements.statusBar.innerHTML = `<i class="fa-solid fa-database"></i> loaded <strong>${state.records.length}</strong> rows from Excel`;
+            } catch (err) {
+                setExcelTableError('Failed to fetch Excel data.');
+            }
+        }
+
+        // Handle direct file uploads (AJAX upload)
+        async function handleFileUpload(file, type) {
+            if (!file) return;
+            
+            const formData = new FormData();
+            formData.append(type, file);
+            
+            showToast(`Uploading ${file.name}...`, 'success');
+            
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const res = await response.json();
+                if (res.status === 'success') {
+                    showToast(`${file.name} uploaded successfully!`, 'success');
+                    await fetchConfig();
+                    
+                    if (type === 'template') {
+                        elements.templateFilename.textContent = file.name;
+                        // Reload image
+                        elements.templateImg.src = `/${file.name}?t=${Date.now()}`;
+                        elements.templateImg.onload = () => {
+                            updateCanvasTags();
+                        };
+                    } else if (type === 'excel') {
+                        elements.excelFilename.textContent = file.name;
+                        await fetchExcelData();
+                    }
+                } else {
+                    showToast('Upload failed.', 'error');
+                }
+            } catch (err) {
+                showToast('Error uploading file.', 'error');
+            }
+        }
+
+        // Render controls list in sidebar
+        function updateFieldListUI() {
+            elements.fieldsContainer.innerHTML = '';
+            
+            const fields = state.config.fields || {};
+            
+            if (Object.keys(fields).length === 0) {
+                elements.fieldsContainer.innerHTML = `
+                    <div style="text-align: center; font-size: 0.75rem; color: var(--text-muted); padding: 1.5rem 0;">
+                        No text fields mapped yet. Add columns or click 'Save Config' to initialize.
+                    </div>
+                `;
+                return;
+            }
+
+            Object.entries(fields).forEach(([fieldName, fCfg]) => {
+                const isPickerActive = state.activePickerField === fieldName;
+                
+                // Build options list for fonts dropdown
+                const fontOptionsHtml = state.availableFonts.map(font => 
+                    `<option value="${font}" ${fCfg.font === font ? 'selected' : ''}>${font.replace('.ttf', '').replace('.otf', '')}</option>`
+                ).join('');
+
+                const fieldItemHtml = `
+                    <div class="field-item" id="field-card-${fieldName}">
+                        <div class="field-header">
+                            <div class="field-name-wrapper" onclick="toggleFieldAccordion('${fieldName}')">
+                                <i class="fa-solid fa-align-center"></i>
+                                <span>${fieldName}</span>
+                            </div>
+                            <div class="field-controls">
+                                <button class="btn-icon ${isPickerActive ? 'active' : ''}" 
+                                        onclick="togglePickerMode('${fieldName}', event)" 
+                                        title="Pick coordinate from canvas">
+                                    <i class="fa-solid fa-crosshairs"></i>
+                                </button>
+                                <button class="btn-icon" onclick="deleteFieldMapping('${fieldName}', event)" title="Remove mapping">
+                                    <i class="fa-regular fa-trash-can" style="font-size: 0.8rem; color: var(--danger);"></i>
+                                </button>
+                                <i class="fa-solid fa-chevron-down toggle-icon" onclick="toggleFieldAccordion('${fieldName}')"></i>
+                            </div>
+                        </div>
+                        <div class="field-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>X Position (px)</label>
+                                    <input type="number" id="input-${fieldName}-x" value="${fCfg.x || 0}" oninput="updateFieldProperty('${fieldName}', 'x', this.value)">
+                                </div>
+                                <div class="form-group">
+                                    <label>Y Position (px)</label>
+                                    <input type="number" id="input-${fieldName}-y" value="${fCfg.y || 0}" oninput="updateFieldProperty('${fieldName}', 'y', this.value)">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Font Size (pt)</label>
+                                    <input type="number" id="input-${fieldName}-font_size" value="${fCfg.font_size || 32}" oninput="updateFieldProperty('${fieldName}', 'font_size', this.value)">
+                                </div>
+                                <div class="form-group">
+                                    <label>Font Style</label>
+                                    <select id="input-${fieldName}-font" onchange="updateFieldProperty('${fieldName}', 'font', this.value)">
+                                        ${fontOptionsHtml}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Color</label>
+                                    <input type="color" id="input-${fieldName}-color" value="${fCfg.color && fCfg.color.startsWith('#') ? fCfg.color : '#000000'}" onchange="updateFieldProperty('${fieldName}', 'color', this.value)">
+                                </div>
+                                <div class="form-group">
+                                    <label>Alignment</label>
+                                    <select id="input-${fieldName}-align" onchange="updateFieldProperty('${fieldName}', 'align', this.value)">
+                                        <option value="center" ${fCfg.align === 'center' ? 'selected' : ''}>Center</option>
+                                        <option value="left" ${fCfg.align === 'left' ? 'selected' : ''}>Left</option>
+                                        <option value="right" ${fCfg.align === 'right' ? 'selected' : ''}>Right</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Static/Format Template (Optional)</label>
+                                <input type="text" id="input-${fieldName}-text" placeholder="{${fieldName}}" value="${fCfg.text || ''}" oninput="updateFieldProperty('${fieldName}', 'text', this.value)">
+                            </div>
+                        </div>
+                    </div>
+                `;
+                elements.fieldsContainer.insertAdjacentHTML('beforeend', fieldItemHtml);
+            });
+        }
+
+        // Toggle configuration accordions
+        function toggleFieldAccordion(fieldName) {
+            const card = document.getElementById(`field-card-${fieldName}`);
+            if (card) {
+                card.classList.toggle('expanded');
+            }
+        }
+
+        // Dynamic change updates
+        function updateFieldProperty(fieldName, property, value) {
+            if (!state.config.fields[fieldName]) return;
+            
+            // Format numbers correctly
+            if (property === 'x' || property === 'y' || property === 'font_size') {
+                value = parseInt(value) || 0;
+            }
+            
+            state.config.fields[fieldName][property] = value;
+            updateCanvasTags();
+            autoSaveConfig();
+        }
+
+        // Add a new custom field overlay config
+        function addNewCustomField() {
+            const fieldName = prompt("Enter Excel Column name to map (e.g. 'Event', 'Role', or custom header):");
+            if (!fieldName) return;
+            
+            const sanitized = fieldName.trim();
+            if (state.config.fields[sanitized]) {
+                showToast(`Field '${sanitized}' already exists.`, 'error');
+                return;
+            }
+            
+            state.config.fields[sanitized] = {
+                x: 960,
+                y: 540,
+                font_size: 28,
+                color: "#0f172a",
+                font: "Montserrat-Medium.ttf",
+                align: "center",
+                text: `{${sanitized}}`
+            };
+            
+            updateFieldListUI();
+            // Expand the newly created card
+            setTimeout(() => {
+                const card = document.getElementById(`field-card-${sanitized}`);
+                if (card) card.classList.add('expanded');
+            }, 50);
+            updateCanvasTags();
+            showToast(`Field '${sanitized}' added!`, 'success');
+            autoSaveConfig();
+        }
+
+        // Delete field config mapping
+        function deleteFieldMapping(fieldName, event) {
+            event.stopPropagation();
+            if (!confirm(`Are you sure you want to remove the layout settings for '${fieldName}'?`)) return;
+            
+            delete state.config.fields[fieldName];
+            if (state.activePickerField === fieldName) {
+                disablePickerMode();
+            }
+            
+            updateFieldListUI();
+            updateCanvasTags();
+            showToast(`Field '${fieldName}' removed.`, 'success');
+            autoSaveConfig();
+        }
+
+        // Activate Picker Mode for setting coordinates by clicking canvas
+        function togglePickerMode(fieldName, event) {
+            event.stopPropagation();
+            
+            if (state.activePickerField === fieldName) {
+                disablePickerMode();
+                return;
+            }
+            
+            state.activePickerField = fieldName;
+            elements.canvasWrapper.classList.add('picker-active');
+            
+            // Display visual message indicator
+            elements.pickerFieldName.textContent = fieldName;
+            elements.pickerMsg.style.display = 'block';
+            
+            // Re-render field icons
+            updateFieldListUI();
+            updateCanvasTags();
+        }
+
+        // De-activate coordinate clicking mode
+        function disablePickerMode() {
+            state.activePickerField = null;
+            elements.canvasWrapper.classList.remove('picker-active');
+            elements.pickerMsg.style.display = 'none';
+            updateFieldListUI();
+            updateCanvasTags();
+        }
+
+        // Canvas element click mapping calculations
+        function handleCanvasClick(e) {
+            if (!state.activePickerField) return;
+            
+            const rect = elements.templateImg.getBoundingClientRect();
+            
+            // Relative click coordinates on display element
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+            
+            // Raw resolution scale matching
+            const rawWidth = elements.templateImg.naturalWidth;
+            const rawHeight = elements.templateImg.naturalHeight;
+            
+            if (!rawWidth || !rawHeight) {
+                showToast('Image not loaded correctly.', 'error');
+                return;
+            }
+            
+            const rawX = Math.round((clickX / rect.width) * rawWidth);
+            const rawY = Math.round((clickY / rect.height) * rawHeight);
+            
+            // Update input settings
+            updateFieldProperty(state.activePickerField, 'x', rawX);
+            updateFieldProperty(state.activePickerField, 'y', rawY);
+            
+            // Update UI inputs in DOM directly if they are expanded
+            const xInput = document.getElementById(`input-${state.activePickerField}-x`);
+            const yInput = document.getElementById(`input-${state.activePickerField}-y`);
+            if (xInput) xInput.value = rawX;
+            if (yInput) yInput.value = rawY;
+            
+            showToast(`Set coordinates for '${state.activePickerField}' to X:${rawX}, Y:${rawY}`, 'success');
+            
+            disablePickerMode();
+        }
+
+        // Update tag overlays representing coordinates on the template
+        function updateCanvasTags() {
+            // Remove existing overlay tags
+            document.querySelectorAll('.canvas-tag').forEach(tag => tag.remove());
+            
+            const fields = state.config.fields || {};
+            const rect = elements.templateImg.getBoundingClientRect();
+            const rawWidth = elements.templateImg.naturalWidth;
+            const rawHeight = elements.templateImg.naturalHeight;
+            
+            if (!rawWidth || !rawHeight || rect.width === 0) return;
+            
+            Object.entries(fields).forEach(([fieldName, fCfg]) => {
+                // Map raw coordinates to screen pixel offsets
+                const screenX = (fCfg.x / rawWidth) * rect.width;
+                const screenY = (fCfg.y / rawHeight) * rect.height;
+                
+                const tag = document.createElement('div');
+                tag.className = 'canvas-tag';
+                if (state.activePickerField === fieldName) {
+                    tag.classList.add('active');
+                }
+                
+                tag.style.left = `${screenX}px`;
+                tag.style.top = `${screenY}px`;
+                tag.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${fieldName}`;
+                
+                elements.canvasWrapper.appendChild(tag);
+            });
+        }
+
+        let autoSaveTimer = null;
+        function autoSaveConfig() {
+            if (autoSaveTimer) clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(async () => {
+                try {
+                    const folderInput = document.getElementById('main-folder-name-input');
+                    if (folderInput) {
+                        state.config.main_folder_name = folderInput.value.trim() || 'Certificates';
+                    }
+                    const response = await fetch('/api/config', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(state.config)
+                    });
+                    if (response.ok) {
+                        console.log('Layout settings auto-saved.');
+                    }
+                } catch (err) {
+                    console.error('Failed to auto-save configuration:', err);
+                }
+            }, 600);
+        }
+
+        // Save current configurations in JSON
+        async function saveLayoutConfig() {
+            elements.saveConfigBtn.disabled = true;
+            elements.saveConfigBtn.innerHTML = '<span class="spinner"></span> Saving...';
+            
+            try {
+                const folderInput = document.getElementById('main-folder-name-input');
+                if (folderInput) {
+                    state.config.main_folder_name = folderInput.value.trim() || 'Certificates';
+                }
+                
+                const response = await fetch('/api/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(state.config)
+                });
+                
+                if (response.ok) {
+                    showToast('Layout settings saved successfully!', 'success');
+                } else {
+                    showToast('Failed to save layout settings.', 'error');
+                }
+            } catch (err) {
+                showToast('Failed to save config on server.', 'error');
+            } finally {
+                elements.saveConfigBtn.disabled = false;
+                elements.saveConfigBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Layout Config';
+            }
+        }
+
+        // Request single preview generation
+        async function triggerPreview() {
+            elements.previewBtn.disabled = true;
+            elements.previewBtn.innerHTML = '<span class="spinner"></span> Generating...';
+            
+            try {
+                // First save config updates
+                const folderInput = document.getElementById('main-folder-name-input');
+                if (folderInput) {
+                    state.config.main_folder_name = folderInput.value.trim() || 'Certificates';
+                }
+                
+                await fetch('/api/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(state.config)
+                });
+                
+                const response = await fetch('/api/preview');
+                const res = await response.json();
+                
+                if (res.status === 'success') {
+                    showToast('Preview generated!', 'success');
+                    // Reload preview image with timestamp cache breaker
+                    elements.templateImg.src = `${res.url}?t=${Date.now()}`;
+                    
+                    // Switch to layout canvas tab if not active
+                    const layoutTab = document.querySelector('[data-tab="tab-editor"]');
+                    if (layoutTab) layoutTab.click();
+                } else {
+                    showToast(res.error || 'Preview failed.', 'error');
+                }
+            } catch (err) {
+                showToast('Server error while generating preview.', 'error');
+            } finally {
+                elements.previewBtn.disabled = false;
+                elements.previewBtn.innerHTML = '<i class="fa-regular fa-eye"></i> Quick Preview';
+            }
+        }
+
+        let pollingInterval = null;
+
+        function showProgressModal() {
+            if (elements.progressModal) {
+                elements.progressModal.style.display = 'flex';
+            }
+            if (elements.progressStatusText) {
+                elements.progressStatusText.textContent = 'Initializing...';
+            }
+            if (elements.progressPercentText) {
+                elements.progressPercentText.textContent = '0%';
+            }
+            if (elements.progressBarFill) {
+                elements.progressBarFill.style.width = '0%';
+            }
+            if (elements.progressCurrentRecipient) {
+                elements.progressCurrentRecipient.textContent = 'Preparing recipients...';
+            }
+            if (elements.progressSpinnerIcon) {
+                elements.progressSpinnerIcon.style.animation = 'spin 2s linear infinite';
+            }
+            if (elements.progressStopBtn) {
+                elements.progressStopBtn.disabled = false;
+                elements.progressStopBtn.innerHTML = '<i class="fa-solid fa-circle-stop"></i> Stop Generation';
+            }
+        }
+
+        function hideProgressModal() {
+            if (elements.progressModal) {
+                elements.progressModal.style.display = 'none';
+            }
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+            }
+        }
+
+        function startPollingProgress() {
+            if (pollingInterval) clearInterval(pollingInterval);
+            
+            pollingInterval = setInterval(async () => {
+                try {
+                    const response = await fetch('/api/generate/status');
+                    if (!response.ok) return;
+                    const data = await response.json();
+                    
+                    if (data.is_running) {
+                        const current = data.current;
+                        const total = data.total;
+                        const percent = total > 0 ? Math.round((current / total) * 100) : 0;
+                        
+                        if (elements.progressStatusText) {
+                            elements.progressStatusText.textContent = `Generating (${current}/${total})`;
+                        }
+                        if (elements.progressPercentText) {
+                            elements.progressPercentText.textContent = `${percent}%`;
+                        }
+                        if (elements.progressBarFill) {
+                            elements.progressBarFill.style.width = `${percent}%`;
+                        }
+                        if (elements.progressCurrentRecipient) {
+                            elements.progressCurrentRecipient.textContent = data.current_name ? `Recipient: ${data.current_name}` : 'Preparing...';
+                        }
+                    } else {
+                        // Task completed or ended
+                        clearInterval(pollingInterval);
+                        pollingInterval = null;
+                        hideProgressModal();
+                        
+                        if (data.status === 'completed') {
+                            showToast('Successfully generated certificates!', 'success');
+                            await refreshGallery();
+                            if (elements.galleryTabHeader) {
+                                elements.galleryTabHeader.click();
+                            }
+                        } else if (data.status === 'cancelled') {
+                            showToast('Certificate generation stopped by user.', 'warning');
+                            await refreshGallery();
+                            if (elements.galleryTabHeader) {
+                                elements.galleryTabHeader.click();
+                            }
+                        } else if (data.status === 'failed') {
+                            showToast(`Generation failed: ${data.error || 'Unknown error'}`, 'error');
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error polling status', err);
+                }
+            }, 800);
+        }
+
+        // Request full batch generation
+        async function triggerBatchGenerate() {
+            elements.generateBtn.disabled = true;
+            elements.generateBtn.innerHTML = '<span class="spinner"></span> Processing...';
+            showToast('Starting batch generation engine...', 'success');
+            
+            try {
+                const payload = {
+                    fields: state.config.fields,
+                    scanned_columns: state.config.scanned_columns || []
+                };
+
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const res = await response.json();
+                
+                if (res.status === 'success') {
+                    showProgressModal();
+                    startPollingProgress();
+                } else {
+                    showToast(res.error || 'Batch generation failed to start.', 'error');
+                }
+            } catch (err) {
+                showToast('Server error during generation.', 'error');
+            } finally {
+                elements.generateBtn.disabled = false;
+                elements.generateBtn.innerHTML = '<i class="fa-solid fa-gears"></i> Batch Generate';
+            }
+        }
+
+        // Reload output directory contents for display
+        async function refreshGallery() {
+            try {
+                const response = await fetch('/api/certificates');
+                const res = await response.json();
+                
+                const files = res.files || [];
+                const driveLinks = res.drive_links || {};
+                // Filter preview.png from gallery display
+                const certs = files.filter(f => f !== 'preview.png');
+                
+                elements.galleryContainer.innerHTML = '';
+                
+                if (certs.length === 0) {
+                    elements.galleryContainer.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 3rem;">
+                            <i class="fa-regular fa-folder-open" style="font-size: 2.5rem; margin-bottom: 1rem; display: block; color: rgba(255,255,255,0.15);"></i>
+                            No certificates generated yet. Click "Batch Generate" to produce high-resolution copies.
+                        </div>
+                    `;
+                    elements.downloadZipBtn.disabled = true;
+                    elements.downloadReportBtn.disabled = true;
+                    if (elements.deleteAllBtn) elements.deleteAllBtn.disabled = true;
+                    return;
+                }
+                
+                elements.downloadZipBtn.disabled = false;
+                elements.downloadReportBtn.disabled = false;
+                if (elements.deleteAllBtn) elements.deleteAllBtn.disabled = false;
+                
+                certs.forEach(file => {
+                    const driveUrl = driveLinks[file];
+                    const driveButtonHtml = driveUrl ? `
+                        <a href="${driveUrl}" target="_blank" class="btn-icon" onclick="event.stopPropagation()" title="Open in Google Drive" style="background-color: var(--accent); color: white;">
+                            <i class="fa-brands fa-google-drive"></i>
+                        </a>
+                    ` : '';
+                    
+                    // Display name without path or folder prefixes for cleaner look, but we show the folder as a tag!
+                    let displayName = file;
+                    let folderTagHtml = '';
+                    if (file.includes('/')) {
+                        const parts = file.split('/');
+                        displayName = parts[parts.length - 1];
+                        const folderName = parts.slice(0, -1).join('/');
+                        folderTagHtml = `<span style="font-size: 0.7rem; background-color: var(--surface); border: 1px solid var(--border); padding: 0.1rem 0.3rem; border-radius: var(--radius-sm); font-weight: 700; color: var(--text-secondary); margin-bottom: 0.25rem; display: inline-block;">${folderName}</span>`;
+                    }
+                    
+                    displayName = displayName.replace('certificate_', '').replace('.png', '').replace('.jpg', '').replace('.jpeg', '');
+                    
+                    const cardHtml = `
+                        <div class="gallery-card" onclick="openLightbox('/output/${file}')">
+                            <div class="gallery-thumb-wrapper">
+                                <img src="/output/${file}?t=${Date.now()}" alt="${file}">
+                            </div>
+                            <div class="gallery-card-info" style="flex-direction: column; align-items: flex-start; gap: 0.25rem;">
+                                ${folderTagHtml}
+                                <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                                    <span class="gallery-card-title" title="${displayName}">${displayName}</span>
+                                    <div class="gallery-card-actions">
+                                        ${driveButtonHtml}
+                                        <a href="/output/${file}" download class="btn-icon" onclick="event.stopPropagation()" title="Download image">
+                                            <i class="fa-solid fa-download"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    elements.galleryContainer.insertAdjacentHTML('beforeend', cardHtml);
+                });
+            } catch (err) {
+                console.error('Failed to load gallery items', err);
+            }
+        }
+
+        // Check Google Drive Connection status
+        async function checkDriveStatus() {
+            try {
+                const response = await fetch('/api/drive-status');
+                const data = await response.json();
+                
+                // 1. Update the active method radio buttons
+                const radioBtn = document.querySelector(`input[name="drive-method"][value="${data.active_method || 'none'}"]`);
+                if (radioBtn) {
+                    radioBtn.checked = true;
+                }
+                
+                // 2. Update Service Account section UI
+                const saStatusBadge = document.getElementById('sa-status-badge');
+                const saDrop = document.getElementById('sa-drop');
+                const saDisconnectBtn = document.getElementById('sa-disconnect-btn');
+                
+                if (data.service_account.has_file) {
+                    if (data.service_account.connected) {
+                        saStatusBadge.textContent = 'Connected';
+                        saStatusBadge.style.backgroundColor = '#eefdf4';
+                        saStatusBadge.style.borderColor = 'var(--success)';
+                        saStatusBadge.style.color = 'var(--success)';
+                    } else {
+                        saStatusBadge.textContent = 'Auth Failed';
+                        saStatusBadge.style.backgroundColor = '#fdf2f2';
+                        saStatusBadge.style.borderColor = 'var(--danger)';
+                        saStatusBadge.style.color = 'var(--danger)';
+                    }
+                    saDrop.style.display = 'none';
+                    saDisconnectBtn.style.display = 'block';
+                } else {
+                    saStatusBadge.textContent = 'Not Configured';
+                    saStatusBadge.style.backgroundColor = 'var(--bg-primary)';
+                    saStatusBadge.style.borderColor = 'var(--border)';
+                    saStatusBadge.style.color = 'var(--text-secondary)';
+                    saDrop.style.display = 'block';
+                    saDisconnectBtn.style.display = 'none';
+                }
+                
+                // 3. Update OAuth section UI
+                const oauthStatusBadge = document.getElementById('oauth-status-badge');
+                const oauthDrop = document.getElementById('oauth-drop');
+                const oauthTrigger = document.getElementById('oauth-trigger');
+                const oauthDisconnectBtn = document.getElementById('oauth-disconnect-btn');
+                
+                if (data.oauth.has_file) {
+                    if (data.oauth.connected) {
+                        oauthStatusBadge.textContent = 'Connected';
+                        oauthStatusBadge.style.backgroundColor = '#eefdf4';
+                        oauthStatusBadge.style.borderColor = 'var(--success)';
+                        oauthStatusBadge.style.color = 'var(--success)';
+                        
+                        oauthDrop.style.display = 'none';
+                        oauthTrigger.style.display = 'none';
+                        oauthDisconnectBtn.style.display = 'block';
+                    } else {
+                        if (data.oauth.has_token) {
+                            oauthStatusBadge.textContent = 'Expired/Failed';
+                            oauthStatusBadge.style.backgroundColor = '#fdf2f2';
+                            oauthStatusBadge.style.borderColor = 'var(--danger)';
+                            oauthStatusBadge.style.color = 'var(--danger)';
+                        } else {
+                            oauthStatusBadge.textContent = 'Needs Login';
+                            oauthStatusBadge.style.backgroundColor = '#fef7e0';
+                            oauthStatusBadge.style.borderColor = '#b45309';
+                            oauthStatusBadge.style.color = '#b45309';
+                        }
+                        
+                        oauthDrop.style.display = 'none';
+                        oauthTrigger.style.display = 'block';
+                        oauthDisconnectBtn.style.display = 'block';
+                    }
+                } else {
+                    oauthStatusBadge.textContent = 'Not Configured';
+                    oauthStatusBadge.style.backgroundColor = 'var(--bg-primary)';
+                    oauthStatusBadge.style.borderColor = 'var(--border)';
+                    oauthStatusBadge.style.color = 'var(--text-secondary)';
+                    
+                    oauthDrop.style.display = 'block';
+                    oauthTrigger.style.display = 'none';
+                    oauthDisconnectBtn.style.display = 'none';
+                }
+                
+                // 4. Update overall status indicator
+                const overallStatusBadge = document.getElementById('drive-status-badge');
+                if (overallStatusBadge) {
+                    if (data.connected) {
+                        overallStatusBadge.innerHTML = `<i class="fa-solid fa-cloud-check" style="color: var(--success);"></i> Sync Active (${data.active_method === 'service_account' ? 'Service Account' : 'OAuth'})`;
+                        overallStatusBadge.style.borderColor = 'var(--success)';
+                        overallStatusBadge.style.color = 'var(--success)';
+                        overallStatusBadge.style.backgroundColor = '#eefdf4';
+                    } else {
+                        overallStatusBadge.innerHTML = `<i class="fa-solid fa-cloud-slash" style="color: var(--text-secondary);"></i> Sync Disabled`;
+                        overallStatusBadge.style.borderColor = 'var(--border)';
+                        overallStatusBadge.style.color = 'var(--text-secondary)';
+                        overallStatusBadge.style.backgroundColor = 'var(--surface)';
+                    }
+                }
+            } catch (err) {
+                console.error("Error checking Drive status:", err);
+            }
+        }
+
+        // Disconnect/delete specific Google Drive method credentials
+        async function disconnectDriveMethod(method) {
+            const desc = method === 'service_account' ? 'Service Account Key' : 'OAuth Client Credentials';
+            if (!confirm(`Are you sure you want to delete and disconnect ${desc}?`)) return;
+            
+            showToast(`Disconnecting ${desc}...`, "success");
+            try {
+                const response = await fetch('/api/drive-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: "disconnect", target: method })
+                });
+                const res = await response.json();
+                showToast("Credentials deleted successfully.", "success");
+                await checkDriveStatus();
+            } catch (err) {
+                showToast("Failed to disconnect credentials.", "error");
+            }
+        }
+
+        // Upload credentials JSON file (Service account or OAuth)
+        async function handleDriveCredentialsUpload(file, type) {
+            if (!file) return;
+            if (!file.name.endsWith('.json')) {
+                showToast('Credentials must be a JSON file.', 'error');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append(type, file);
+            
+            showToast('Uploading credentials...', 'success');
+            try {
+                const response = await fetch('/api/drive-status', {
+                    method: 'POST',
+                    body: formData
+                });
+                const res = await response.json();
+                if (res.status === 'success') {
+                    showToast('Credentials uploaded successfully!', 'success');
+                    if (type === 'credentials') {
+                        showToast('Please click "Connect Account" to authenticate via OAuth.', 'success');
+                    }
+                    await checkDriveStatus();
+                } else {
+                    showToast('Failed to upload credentials.', 'error');
+                }
+            } catch (err) {
+                showToast('Failed to upload credentials.', 'error');
+            }
+        }
+
+        // Open image full-screen lightbox
+        function openLightbox(url) {
+            elements.lightboxImg.src = url;
+            elements.lightboxModal.style.display = 'flex';
+        }
+
+        // Update Excel recipient UI
+        function updateExcelTableUI() {
+            if (state.headers.length === 0) {
+                setExcelTableError('Spreadsheet file does not contain header columns.');
+                return;
+            }
+            
+            // Generate headers
+            let headerHtml = '<tr>';
+            state.headers.forEach(h => {
+                headerHtml += `<th>${h}</th>`;
+            });
+            headerHtml += '</tr>';
+            
+            // Generate rows
+            let bodyHtml = '';
+            state.records.forEach(row => {
+                let rowHtml = '<tr>';
+                state.headers.forEach(h => {
+                    rowHtml += `<td>${row[h] || ''}</td>`;
+                });
+                rowHtml += '</tr>';
+                bodyHtml += rowHtml;
+            });
+            
+            elements.dataTable.innerHTML = `
+                <thead>${headerHtml}</thead>
+                <tbody>${bodyHtml}</tbody>
+            `;
+        }
+
+        function setExcelTableError(message) {
+            elements.dataTable.innerHTML = `
+                <thead>
+                    <tr><th>Spreadsheet Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td style="color: var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i> ${message}</td></tr>
+                </tbody>
+            `;
+        }
+
+        // Toast notifications alert manager
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
+            toast.innerHTML = `
+                <i class="fa-solid ${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            const container = document.getElementById('toast-container');
+            container.appendChild(toast);
+            
+            // Animate fadeout
+            setTimeout(() => {
+                toast.classList.add('exit');
+                toast.addEventListener('animationend', () => toast.remove());
+            }, 2500); // Fades out and slides up after 2.5 seconds
+        }
+
+        // Start initialization process
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

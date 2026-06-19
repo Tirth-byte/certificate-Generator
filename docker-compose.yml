@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  cert-generator:
+    build: .
+    container_name: cert-generator-app
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - HOST=0.0.0.0
+      - FLASK_DEBUG=false
+    volumes:
+      # Mount output folder to persist generated certificate outputs locally
+      - ./output:/app/output
+      # Mount fonts folder to persist downloaded TrueType fonts
+      - ./fonts:/app/fonts
+    restart: unless-stopped

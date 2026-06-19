@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Virtual environments
+venv/
+ENV/
+env/
+.env
+.venv
+
+# Runtime dynamic files and logs
+output/
+fonts/
+*.log
+
+# Sensitive Google Drive API credentials & local config file
+config.json
+credentials.json
+service_account.json
+token.json
