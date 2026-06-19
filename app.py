@@ -45,7 +45,8 @@ def health():
 
 @app.route("/")
 def home():
-    return "Certificate Generator Running Successfully"
+    import os
+    return f"Worker PID: {os.getpid()}"
 
 @app.route("/dashboard")
 def dashboard():
@@ -742,6 +743,8 @@ def drive_status():
             "connected": oauth_connected
         }
     })
+print("Flask Startup URL Map:")
+print(app.url_map)
 
 
 if __name__ == "__main__":

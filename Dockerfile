@@ -36,4 +36,4 @@ USER appuser
 EXPOSE 5001
 
 # Run the app using Gunicorn WSGI server for production performance and stability
-CMD gunicorn --bind 0.0.0.0:${PORT} --workers 4 --threads 2 app:app
+CMD gunicorn --bind 0.0.0.0:${PORT} --workers 1 app:app
