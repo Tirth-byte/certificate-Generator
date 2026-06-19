@@ -612,6 +612,10 @@ def drive_status():
     
     if request.method == "DELETE" or (request.method == "POST" and json_data.get("action") == "disconnect"):
         target = json_data.get("target") or "all"
+        warning = None
+        if os.environ.get("RENDER") or os.environ.get("HOST") == "0.0.0.0":
+            warning = "Note: Since you are deployed on Render, if you configured Google Drive Sync using environment variables, you must delete or clear them from your Render dashboard to fully remove access."
+            
         if target == "service_account":
             path = os.path.join(BASE_DIR, "service_account.json")
             if os.path.exists(path):
@@ -631,11 +635,17 @@ def drive_status():
                     try: os.remove(path)
                     except: pass
                     
-        return jsonify({"status": "success", "connected": False})
+        return jsonify({"status": "success", "connected": False, "warning": warning})
         
     if request.method == "POST":
         # Handle OAuth login request
         if json_data.get("action") == "oauth_login":
+            if os.environ.get("RENDER") or os.environ.get("HOST") == "0.0.0.0":
+                return jsonify({
+                    "status": "error",
+                    "error": "Interactive OAuth login is not supported on cloud hosting environments. Please paste the content of your token.json file directly into the GOOGLE_OAUTH_TOKEN_JSON environment variable in your Render dashboard."
+                })
+                
             token_path = os.path.join(BASE_DIR, "token.json")
             if os.path.exists(token_path):
                 try: os.remove(token_path)
@@ -699,9 +709,9 @@ def drive_status():
     config = load_config()
     active_method = config.get("active_drive_method")
     
-    has_sa = os.path.exists(os.path.join(BASE_DIR, "service_account.json"))
+    has_sa = os.path.exists(os.path.join(BASE_DIR, "service_account.json")) or bool(os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON"))
     has_oauth = os.path.exists(os.path.join(BASE_DIR, "credentials.json"))
-    has_token = os.path.exists(os.path.join(BASE_DIR, "token.json"))
+    has_token = os.path.exists(os.path.join(BASE_DIR, "token.json")) or bool(os.environ.get("GOOGLE_OAUTH_TOKEN_JSON"))
     
     if not active_method:
         if has_sa:
