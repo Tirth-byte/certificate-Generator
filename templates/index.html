@@ -1737,12 +1737,11 @@
                 ).join('');
 
                 // Build options list for Excel Column mapping dropdown
-                const isCustom = !state.headers.map(h => `{${h}}`).includes(fCfg.text);
                 const excelColOptionsHtml = [
-                    `<option value="" ${isCustom ? 'selected' : ''}>-- Custom Static Text --</option>`,
+                    `<option value="" disabled selected>-- Insert Excel Column --</option>`,
                     ...state.headers.map(header => {
                         const val = `{${header}}`;
-                        return `<option value="${val}" ${fCfg.text === val ? 'selected' : ''}>${header} (${val})</option>`;
+                        return `<option value="${val}">${header} (${val})</option>`;
                     })
                 ].join('');
 
@@ -1805,14 +1804,14 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Connect to Excel Column</label>
-                                    <select id="input-${fieldName}-excel-map" onchange="updateFieldProperty('${fieldName}', 'text', this.value); document.getElementById('input-${fieldName}-text').value = this.value;">
+                                    <select id="input-${fieldName}-excel-map" onchange="insertExcelColumnPlaceholder('${fieldName}', this.value); this.selectedIndex = 0;">
                                         ${excelColOptionsHtml}
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group" style="margin-top: 0.5rem;">
                                 <label>Custom Format Template (e.g. 'Awarded to {Name}')</label>
-                                <input type="text" id="input-${fieldName}-text" placeholder="{${fieldName}}" value="${fCfg.text || ''}" oninput="updateFieldProperty('${fieldName}', 'text', this.value); document.getElementById('input-${fieldName}-excel-map').value = (state.headers.map(h => '{'+h+'}').includes(this.value) ? this.value : '');">
+                                <input type="text" id="input-${fieldName}-text" placeholder="{${fieldName}}" value="${fCfg.text || ''}" oninput="updateFieldProperty('${fieldName}', 'text', this.value);">
                             </div>
                         </div>
                     </div>
@@ -1868,6 +1867,17 @@
             }
             if (updated) {
                 updateScannedColumnsConfig();
+            }
+        }
+
+        // Helper to insert column placeholder into the custom format input
+        function insertExcelColumnPlaceholder(fieldName, placeholder) {
+            if (!placeholder) return;
+            const input = document.getElementById(`input-${fieldName}-text`);
+            if (input) {
+                const currentVal = input.value.trim();
+                input.value = currentVal ? `${currentVal} ${placeholder}` : placeholder;
+                updateFieldProperty(fieldName, 'text', input.value);
             }
         }
 
