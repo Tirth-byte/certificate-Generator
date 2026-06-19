@@ -1659,6 +1659,7 @@
                 
                 renderRecipientCheckboxes();
                 updateExcelTableUI();
+                updateFieldListUI();
                 elements.statusBar.innerHTML = `<i class="fa-solid fa-database"></i> loaded <strong>${state.records.length}</strong> rows from Excel`;
             } catch (err) {
                 setExcelTableError('Failed to fetch Excel data.');
@@ -1726,6 +1727,16 @@
                     `<option value="${font}" ${fCfg.font === font ? 'selected' : ''}>${font.replace('.ttf', '').replace('.otf', '')}</option>`
                 ).join('');
 
+                // Build options list for Excel Column mapping dropdown
+                const isCustom = !state.headers.map(h => `{${h}}`).includes(fCfg.text);
+                const excelColOptionsHtml = [
+                    `<option value="" ${isCustom ? 'selected' : ''}>-- Custom Static Text --</option>`,
+                    ...state.headers.map(header => {
+                        const val = `{${header}}`;
+                        return `<option value="${val}" ${fCfg.text === val ? 'selected' : ''}>${header} (${val})</option>`;
+                    })
+                ].join('');
+
                 const fieldItemHtml = `
                     <div class="field-item" id="field-card-${fieldName}">
                         <div class="field-header">
@@ -1782,9 +1793,17 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label>Static/Format Template (Optional)</label>
-                                <input type="text" id="input-${fieldName}-text" placeholder="{${fieldName}}" value="${fCfg.text || ''}" oninput="updateFieldProperty('${fieldName}', 'text', this.value)">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Connect to Excel Column</label>
+                                    <select id="input-${fieldName}-excel-map" onchange="updateFieldProperty('${fieldName}', 'text', this.value); document.getElementById('input-${fieldName}-text').value = this.value;">
+                                        ${excelColOptionsHtml}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top: 0.5rem;">
+                                <label>Custom Format Template (e.g. 'Awarded to {Name}')</label>
+                                <input type="text" id="input-${fieldName}-text" placeholder="{${fieldName}}" value="${fCfg.text || ''}" oninput="updateFieldProperty('${fieldName}', 'text', this.value); document.getElementById('input-${fieldName}-excel-map').value = (state.headers.map(h => '{'+h+'}').includes(this.value) ? this.value : '');">
                             </div>
                         </div>
                     </div>
@@ -1817,7 +1836,7 @@
 
         // Add a new custom field overlay config
         function addNewCustomField() {
-            const fieldName = prompt("Enter Excel Column name to map (e.g. 'Event', 'Role', or custom header):");
+            const fieldName = prompt("Enter a name for the new text field (e.g. 'Student Name', 'Title'):");
             if (!fieldName) return;
             
             const sanitized = fieldName.trim();
@@ -1826,6 +1845,10 @@
                 return;
             }
             
+            // Try to auto-match with an Excel column case-insensitively
+            const matchedHeader = state.headers.find(h => h.toLowerCase() === sanitized.toLowerCase());
+            const textVal = matchedHeader ? `{${matchedHeader}}` : `{${sanitized}}`;
+            
             state.config.fields[sanitized] = {
                 x: 960,
                 y: 540,
@@ -1833,7 +1856,7 @@
                 color: "#0f172a",
                 font: "Montserrat-Medium.ttf",
                 align: "center",
-                text: `{${sanitized}}`
+                text: textVal
             };
             
             updateFieldListUI();
