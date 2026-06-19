@@ -44,12 +44,7 @@ def health():
     return {"status": "ok"}
 
 @app.route("/")
-def home():
-    import os
-    return f"Worker PID: {os.getpid()}"
-
-@app.route("/dashboard")
-def dashboard():
+def index():
     # Make sure sample assets exist if someone visits page
     config = load_config()
     from generator import generate_sample_assets
@@ -743,8 +738,6 @@ def drive_status():
             "connected": oauth_connected
         }
     })
-print("Flask Startup URL Map:")
-print(app.url_map)
 
 
 if __name__ == "__main__":
