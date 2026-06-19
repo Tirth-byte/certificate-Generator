@@ -39,8 +39,16 @@ def save_config(config):
     with open(CONFIG_PATH, "w") as f:
         json.dump(config, f, indent=4)
 
+@app.route("/health")
+def health():
+    return {"status": "ok"}
+
 @app.route("/")
-def index():
+def home():
+    return "Certificate Generator Running Successfully"
+
+@app.route("/dashboard")
+def dashboard():
     # Make sure sample assets exist if someone visits page
     config = load_config()
     from generator import generate_sample_assets

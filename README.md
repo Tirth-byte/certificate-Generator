@@ -86,7 +86,7 @@ pip install -r requirements.txt
     ```bash
     python app.py
     ```
-    Then open your browser and navigate to 👉 **[http://127.0.0.1:5001](http://127.0.0.1:5001)** (or your custom `$PORT`).
+    Then open your browser and navigate to 👉 **[http://127.0.0.1:5001/dashboard](http://127.0.0.1:5001/dashboard)** (or your custom `$PORT`/dashboard).
     
 *   **Option B: Command Line CLI**
     ```bash
