@@ -18,6 +18,25 @@ CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 os.makedirs(FONTS_DIR, exist_ok=True)
 
+# Write environment credentials to local files for cloud compatibility on startup
+sa_json = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON")
+if sa_json:
+    try:
+        with open(os.path.join(BASE_DIR, "service_account.json"), "w") as f:
+            f.write(sa_json)
+        print("Successfully wrote service_account.json from environment variable.")
+    except Exception as e:
+        print(f"Error writing service_account.json: {e}")
+
+token_json = os.environ.get("GOOGLE_OAUTH_TOKEN_JSON")
+if token_json:
+    try:
+        with open(os.path.join(BASE_DIR, "token.json"), "w") as f:
+            f.write(token_json)
+        print("Successfully wrote token.json from environment variable.")
+    except Exception as e:
+        print(f"Error writing token.json: {e}")
+
 # Helper to load config
 def load_config():
     if os.path.exists(CONFIG_PATH):
